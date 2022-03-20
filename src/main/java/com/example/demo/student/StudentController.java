@@ -1,0 +1,43 @@
+package com.example.demo.student;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+// API layer
+@RestController
+@RequestMapping(path = "api/v1/student") //endpoint
+public class StudentController {
+
+    private final StudentService studentService;
+
+    @Autowired //auto instantiate because studentService is not an instance
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @GetMapping // get a list of students
+    public List<Student> getStudents() {
+        return studentService.getStudents();
+    }
+
+    @PostMapping // add new resources to systems
+    public void resgisterNewStudent(@RequestBody Student student) {
+        studentService.addNewStudent(student);
+    }
+
+    @DeleteMapping(path = "{studentId}") // delete student by ID
+    public void deleteStudent(@PathVariable("studentId") Long studentId) {
+        studentService.deleteStudent(studentId);
+    }
+
+    @PutMapping(path = "{studentId}")
+    public void updateStudent(
+            @PathVariable("studentId") Long studentId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email) {
+        studentService.updateStudent(studentId, name, email);
+    }
+
+}
